@@ -19,6 +19,7 @@ public class Client
     private EventLoopGroup loop = new NioEventLoopGroup();
     public static void main( String[] args )
     {
+
         new Client().run();
     }
     public Bootstrap createBootstrap(Bootstrap bootstrap, EventLoopGroup eventLoop) {

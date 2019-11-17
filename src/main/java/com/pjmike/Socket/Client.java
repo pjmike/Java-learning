@@ -2,7 +2,9 @@ package com.pjmike.Socket;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.Buffer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 /**
  * 客户端
@@ -11,35 +13,35 @@ import java.nio.Buffer;
  * @create 2018-08-12 17:52
  */
 public class Client {
-    private Socket socket = null;
-    private DataOutputStream output = null;
-    private BufferedReader input = null;
+
+    private String address;
+    private int port;
 
     public Client(String address, int port) {
+        this.address = address;
+        this.port = port;
+
+    }
+
+    public void start() {
         try {
             //建立连接
-            socket = new Socket(address, port);
-            System.out.println("Connected ...");
+            Socket socket = new Socket(address, port);
+            System.out.println("请输入你的姓名和学号...");
             //从控制台输入信息
-            input = new BufferedReader(new InputStreamReader(System.in));
-            output = new DataOutputStream(socket.getOutputStream());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String line = "";
-        while (!line.equals("exit")) {
-            try {
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+            DataInputStream replyInput = new DataInputStream(socket.getInputStream());
+            String line = "";
+            while (!line.equals("exit")) {
                 line = input.readLine();
-                System.out.println("客户端输入的是: "+line);
+                System.out.println("客户端输入的是: " + line);
                 output.writeUTF(line);
-            } catch (IOException e) {
-                e.printStackTrace();
+                output.flush();
+                String readLine = replyInput.readUTF();
+                System.out.println("服务端的应答: " + readLine);
             }
-        }
-        try {
             input.close();
-            socket.close();
             output.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,6 +49,11 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Client client = new Client("localhost", 5000);
+        Client client = new Client("localhost", 8000);
+        client.start();
+    }
+
+    public static void run(Socket socket) {
+
     }
 }

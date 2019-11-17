@@ -2,20 +2,18 @@ package com.pjmike.jvm.gc;
 
 
 /**
+ * -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:+PrintGCDateStamps
+ *
  * @author pjmike
- * @create 2018-09-09 11:19
  */
 public class GCCase {
-    public static void allocate_1M() {
-        byte[] _1M = new byte[1024 * 1000];
-    }
+    private static final int _1MB = 1024 * 1024;
 
     public static void main(String[] args) {
-        System.out.println("-Xmx:"+Runtime.getRuntime().maxMemory()/1024/1024+"M");
-//        for (int i = 0; i < 1000; i++) {
-//            allocate_1M();
-//        }
-        allocate_1M();
-        System.gc();
+        byte[] allocation1, allocation2, allocation3, allocation4;
+        allocation1 = new byte[2 * _1MB];
+        allocation2 = new byte[2 * _1MB];
+        allocation3 = new byte[2 * _1MB];
+        allocation4 = new byte[4 * _1MB];
     }
 }
